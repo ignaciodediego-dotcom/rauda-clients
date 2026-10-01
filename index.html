@@ -1,1 +1,312 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Rauda Intelligence</title></head><body><p>Preparando publicación…</p></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rauda Intelligence · Casos de uso Salud</title>
+<style>
+:root{
+  --bg:#f5f7fb;--panel:#fff;--text:#172033;--muted:#667085;--line:#cbd5e1;
+  --accent:#2563eb;--accent-dark:#1d4ed8;--accent-soft:#eff6ff;--green:#15803d;
+  --yellow:#a16207;--orange:#c2410c;--red:#b91c1c;--shadow:0 10px 30px rgba(15,23,42,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0;padding:16px 24px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,var(--accent),#5b8def);color:#fff;display:grid;place-items:center;font-weight:800;box-shadow:0 6px 16px rgba(37,99,235,.22)}
+h1{font-size:18px;margin:0}.sub{font-size:13px;color:var(--muted);margin-top:2px}
+.wrap{max-width:1800px;margin:0 auto;padding:24px clamp(14px,3vw,48px) 64px}
+.legend,.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.legend{margin-bottom:12px}.legend span{font-size:12px;padding:6px 10px;border:1px solid #e2e8f0;border-radius:999px;background:#fff}
+.controls{margin-bottom:30px}.controls button{border:1px solid #d8e0eb;background:#fff;border-radius:10px;padding:9px 13px;color:#344054;cursor:pointer;transition:.2s ease}
+.controls button:hover{border-color:#9db9f8;background:var(--accent-soft);color:var(--accent-dark)}
+.tree{position:relative;min-width:0}
+.root-stage{display:flex;justify-content:center}
+.node{position:relative;display:flex;flex-direction:column;align-items:center;z-index:1}
+.card{position:relative;width:min(100%,330px);background:#fff;border:1px solid #dce3ed;border-radius:16px;padding:17px 18px;text-align:left;box-shadow:0 3px 12px rgba(15,23,42,.045);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-2px);border-color:#b7c5d8;box-shadow:var(--shadow)}
+.card.root{width:min(92vw,500px);border:1px solid #8eb0fa;background:linear-gradient(145deg,#fff,var(--accent-soft));text-align:center;padding:22px 24px;box-shadow:0 12px 35px rgba(37,99,235,.12)}
+.card h2,.card h3,.card h4{margin:0;font-size:15px;line-height:1.32}.card.root h2{font-size:21px}
+.card p{margin:7px 0 0;color:var(--muted);font-size:12.5px;line-height:1.5}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}.root .meta{justify-content:center}.pill{font-size:10.5px;padding:5px 8px;border:1px solid #e0e6ef;border-radius:999px;background:#fff;color:#475467}
+.toggle{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;border:1px solid #aac0ef;background:#fff;color:var(--accent);font-size:21px;line-height:30px;font-weight:500;cursor:pointer;z-index:4;box-shadow:0 4px 12px rgba(37,99,235,.14);transition:.2s ease}
+.toggle:hover{background:var(--accent);border-color:var(--accent);color:#fff;transform:translateX(-50%) scale(1.06)}
+.toggle[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.children{display:none}.children.open{display:grid}
+.level-group{position:relative;margin-top:58px;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:54px 24px;align-items:start}
+.level-group::before{content:"";position:absolute;top:-29px;left:calc(50% / var(--count));right:calc(50% / var(--count));border-top:2px solid var(--line)}
+.tree-cell{position:relative;display:flex;flex-direction:column;align-items:center;min-width:0}
+.tree-cell::before{content:"";position:absolute;left:50%;top:-29px;height:29px;border-left:2px solid var(--line)}
+.tree-cell:first-child::before,.tree-cell:last-child::before{height:31px}
+.pain-cell:has(>.branch-group.open){grid-column:1/-1;padding-top:4px}
+.pain-cell:has(>.branch-group.open)>.node>.card{border-color:#9db9f8;box-shadow:0 8px 24px rgba(37,99,235,.09)}
+.branch-group{width:100%;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:50px 18px;margin-top:56px;padding:0 8px}
+.branch-group::before{top:-28px;left:calc(50% / var(--count));right:calc(50% / var(--count))}
+.branch-group>.tree-cell::before{top:-28px;height:28px}
+.detail-panel{position:relative;width:100%;margin-top:48px}
+.detail-panel::before{content:"";position:absolute;left:50%;top:-31px;height:31px;border-left:2px solid var(--line)}
+.detail-card{width:100%;max-width:560px;background:#fff;border:1px solid #dce3ed;border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail{border:1px solid #e2e8f0;border-radius:11px;padding:11px;background:#f8fafc}
+.detail.wide{grid-column:1/-1}.label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:5px}
+.small{font-size:12.5px;line-height:1.48;color:#344054}
+.e-confirmed{border-top:4px solid var(--green)}.e-partial{border-top:4px solid var(--yellow)}.e-inference{border-top:4px solid var(--orange)}.e-hypothesis{border-top:4px solid var(--red)}
+.empty-state{text-align:center;color:var(--muted);padding:36px}
+@media(max-width:900px){
+  .level-group{grid-template-columns:repeat(2,minmax(240px,1fr))}
+  .pain-cell:has(>.branch-group.open){grid-column:1/-1}
+  .branch-group{grid-template-columns:repeat(2,minmax(220px,1fr))}
+  .level-group::before,.branch-group::before{left:25%;right:25%}
+}
+@media(max-width:620px){
+  header{padding:13px 16px}.wrap{padding:18px 12px 48px}.sub{font-size:12px}
+  .legend{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.legend span{white-space:nowrap}
+  .controls{margin-bottom:24px}
+  .level-group,.branch-group{display:grid;grid-template-columns:1fr;gap:44px;margin-top:52px;padding:0}
+  .level-group::before,.branch-group::before{display:none}
+  .tree-cell::before,.branch-group>.tree-cell::before{top:-27px;height:27px}
+  .tree-cell:not(:first-child)::after{content:"";position:absolute;left:50%;top:-44px;height:17px;border-left:2px solid var(--line)}
+  .card,.card.root{width:100%;max-width:100%}.card.root{padding:19px 18px}.card.root h2{font-size:19px}
+  .detail-grid{grid-template-columns:1fr}.detail.wide{grid-column:auto}
+}
+.pains-viewport{position:relative;display:none;width:100%;max-width:100%;margin-top:30px;padding-top:28px}
+.pains-viewport:has(.pains-group.open){display:block}
+.pains-viewport::before{content:"";position:absolute;left:50%;top:0;height:29px;border-left:2px solid var(--line)}
+.pain-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 9px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+.pain-nav-actions{display:flex;gap:7px}
+.pain-nav button{width:36px;height:32px;border:1px solid #cfd9e7;border-radius:9px;background:#fff;color:var(--accent);font-size:19px;line-height:1;cursor:pointer;box-shadow:0 2px 7px rgba(15,23,42,.05)}
+.pain-nav button:hover{background:var(--accent-soft);border-color:#9db9f8}
+.pain-tools{display:flex;align-items:center;gap:7px}.pain-tools-separator{width:1px;height:24px;background:#d8e0eb;margin:0 2px}
+.pain-nav .fit-map{width:auto;padding:0 10px;font-size:12px}.zoom-value{min-width:40px;text-align:center;font-variant-numeric:tabular-nums;color:#475467;font-weight:700}
+.pains-scroll{width:100%;max-width:100%;overflow-x:auto;overflow-y:visible;scroll-behavior:smooth;scroll-snap-type:x proximity;scroll-padding-inline:12px;overscroll-behavior-inline:contain;scrollbar-color:#a9b8cc transparent;scrollbar-width:thin;padding:0 2px 12px}
+.pains-scroll:focus-visible{outline:2px solid #8eb0fa;outline-offset:-2px;border-radius:12px}
+.pains-group{width:max-content;min-width:100%;margin-top:0;padding:30px 18px 18px;display:none;grid-template-columns:none;justify-content:center;gap:24px;align-items:flex-start}
+.pains-group.open{display:flex}
+.pains-group::before{top:0;left:168px;right:168px}
+.pains-group>.tree-cell{flex:0 0 300px;width:300px;scroll-snap-align:center}
+.pains-group>.tree-cell::before{top:-30px;height:30px}
+.pains-group>.pain-cell:has(>.branch-group.open){grid-column:auto;flex-basis:min(1120px,calc(100vw - 96px));width:min(1120px,calc(100vw - 96px));padding-top:0}
+.branch-group:not(.open),.detail-panel:not(.open){display:none}
+@media(max-width:620px){
+  .pains-viewport{margin-top:26px;padding-top:26px}
+  .pain-nav{margin-bottom:5px}.pain-nav>span{max-width:220px}
+  .pains-group,.pains-group.open{display:flex;gap:16px;padding:28px 10px 18px}
+  .pains-group::before{display:block;top:0;left:calc((100vw - 48px)/2 + 10px);right:calc((100vw - 48px)/2 + 10px)}
+  .pains-group>.tree-cell,.pains-group>.pain-cell:has(>.branch-group.open){flex:0 0 calc(100vw - 48px);width:calc(100vw - 48px)}
+  .pains-group>.tree-cell::before{display:block;top:-28px;height:28px}
+  .pains-group>.tree-cell:not(:first-child)::after{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">R</div>
+    <div><h1>Rauda Intelligence · Salud</h1><div class="sub">Mapa vivo de pains, casos de uso y evidencia</div></div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="legend">
+    <span>🟢 Confirmado</span><span>🟡 Evidencia parcial</span><span>🟠 Inferencia razonable</span><span>🔴 Hipótesis pendiente</span>
+  </div>
+  <div class="controls">
+    <button id="expandAll" type="button">Desplegar todo</button>
+    <button id="collapseAll" type="button">Cerrar todo</button>
+  </div>
+  <div id="tree" class="tree"></div>
+</main>
+<script>
+const data = {
+  title:"Rauda Intelligence · Casos de uso Salud",
+  pains:[
+    {
+      name:"Supervisión limitada por QA / muestreo", priority:"TOP 1", evidence:"Muy alta",
+      why:"Al revisar solo una parte de las conversaciones, pueden quedar fuera situaciones relevantes.",
+      branches:[
+        {name:"Información incorrecta o incompleta", level:"confirmed", evidence:"Confirmada en Vithas", situation:"El agente da información errónea o deja fuera información necesaria.", example:"Un paciente pregunta qué necesita para una prueba y recibe solo una parte de las indicaciones.", consequence:"La gestión posterior puede quedar incompleta o requerir una nueva interacción.", role:"Calidad · Operaciones"},
+        {name:"Instrucciones incorrectas al paciente", level:"confirmed", evidence:"Confirmada en Vithas", situation:"Se dan mal indicaciones necesarias para una prueba o procedimiento.", example:"Se informa incorrectamente sobre la preparación o ayuno antes de una prueba.", consequence:"Puede afectar a la realización posterior de la prueba y generar nuevas gestiones.", role:"Calidad · Operaciones"},
+        {name:"Problemas de atención fuera de la muestra", level:"partial", evidence:"Coincidencia parcial Vithas + Miranza", situation:"Una conversación contiene una mala gestión que nunca llega a revisarse.", example:"El paciente expresa varias veces que no entiende la solución y termina insatisfecho, pero esa llamada no entra en QA.", consequence:"El responsable puede no llegar a conocer el problema.", role:"Calidad · Experiencia de Paciente"},
+        {name:"Resolución real", level:"hypothesis", evidence:"Hipótesis comercial pendiente de validar", situation:"La llamada termina, pero la necesidad del paciente no parece solucionada.", example:"“Entonces, ¿qué tengo que hacer ahora?” y la llamada acaba sin un siguiente paso claro.", consequence:"Posible nueva llamada o problema pendiente.", role:"Operaciones · Contact Center"}
+      ]
+    },
+    {
+      name:"Cumplimiento de protocolos", priority:"TOP 2", evidence:"Alta",
+      why:"La organización define cómo debe gestionarse una situación, pero necesita saber si realmente se ejecuta así.",
+      branches:[
+        {name:"Seguimiento correcto del flujo", level:"confirmed", evidence:"Coincidencia Vithas + Miranza", situation:"El agente se salta uno o varios pasos definidos.", example:"El flujo exige identificar al paciente, entender el motivo, comprobar información y cerrar; el agente omite una comprobación.", consequence:"El procedimiento no se ejecuta como la organización ha establecido.", role:"Calidad · Contact Center"},
+        {name:"Información obligatoria", level:"partial", evidence:"Confirmada en Vithas; Miranza confirma protocolos de forma general", situation:"No se comunica algo que el procedimiento exige explicar.", example:"Antes de terminar la llamada debía comunicarse un siguiente paso y no se hace.", consequence:"Atención no alineada con el procedimiento definido.", role:"Calidad · Operaciones"},
+        {name:"Instrucciones preprueba", level:"confirmed", evidence:"Confirmada en Vithas", situation:"No se ejecuta correctamente un protocolo relacionado con la preparación.", example:"El paciente recibe una indicación incorrecta sobre la preparación de una prueba.", consequence:"Puede afectar al proceso posterior.", role:"Operaciones · Calidad"},
+        {name:"Desviaciones recurrentes", level:"inference", evidence:"Inferencia razonable", situation:"El mismo paso del protocolo falla repetidamente.", example:"Una comprobación concreta se omite de forma recurrente en determinadas llamadas o agentes.", consequence:"Permite identificar un patrón y no solo un error aislado.", role:"Calidad · Contact Center"}
+      ]
+    },
+    {
+      name:"Diferencias entre agentes + coaching", priority:"TOP 3", evidence:"Alta",
+      why:"Los resultados agregados pueden ocultar qué comportamientos necesita mejorar cada agente.",
+      branches:[
+        {name:"Fortalezas y áreas de mejora", level:"confirmed", evidence:"Confirmada en Miranza; evaluación también presente en Vithas", situation:"En qué criterios destaca o falla cada agente.", example:"Laura cumple el protocolo, pero falla recurrentemente al explicar el siguiente paso al paciente.", consequence:"Permite focalizar el feedback individual.", role:"Contact Center · Coordinadores"},
+        {name:"Feedback basado en llamadas reales", level:"confirmed", evidence:"Confirmada conceptualmente en Miranza", situation:"Qué conversaciones concretas justifican la evaluación.", example:"“Estas son las cuatro llamadas de esta semana donde has omitido este paso.”", consequence:"El feedback se apoya en evidencia concreta.", role:"Coordinadores · Contact Center"},
+        {name:"Seguimiento tras coaching", level:"inference", evidence:"Inferencia razonable desde Miranza", situation:"Si el comportamiento señalado vuelve a aparecer después del feedback.", example:"Tras trabajar un paso del protocolo, se comprueba si continúa omitiéndose en semanas posteriores.", consequence:"Permitiría medir evolución.", role:"Contact Center · Coordinadores"},
+        {name:"Buenas prácticas", level:"inference", evidence:"Inferencia razonable", situation:"Qué hacen especialmente bien determinados agentes.", example:"Los agentes con mejores resultados realizan sistemáticamente una determinada acción.", consequence:"Podría convertirse en aprendizaje para el resto del equipo.", role:"Calidad · Formación"}
+      ]
+    },
+    {
+      name:"Comparación / homogeneización entre centros", priority:"TOP 4", evidence:"Media-alta",
+      why:"Un grupo multicentro puede aplicar los mismos estándares sin saber si se ejecutan igual en todos los hospitales.",
+      branches:[
+        {name:"Calidad comparable entre centros", level:"partial", evidence:"Confirmada en Vithas + señal interna de Ion", situation:"Aplicar exactamente los mismos criterios a distintos hospitales.", example:"Hospital A, B y C se evalúan con los mismos 10 criterios y aparecen resultados distintos.", consequence:"Permite localizar diferencias objetivas bajo una misma metodología.", role:"Operaciones · Calidad"},
+        {name:"Protocolos por centro", level:"inference", evidence:"Inferencia razonable", situation:"El mismo protocolo se ejecuta de forma distinta según el hospital.", example:"Un paso se cumple habitualmente en un centro y se omite con más frecuencia en otro.", consequence:"Permite localizar dónde aparece la desviación.", role:"Calidad · Operaciones"},
+        {name:"Motivos de contacto por centro", level:"partial", evidence:"Caso contemplado; relevancia pendiente de validar", situation:"Qué está generando llamadas en cada hospital.", example:"Un centro concentra muchas más llamadas relacionadas con dudas previas a pruebas.", consequence:"Puede señalar un problema operativo que investigar.", role:"Operaciones · Contact Center"},
+        {name:"Buenas prácticas entre centros", level:"inference", evidence:"Inferencia razonable", situation:"Qué hace diferente un hospital con mejores resultados.", example:"Un centro presenta menos problemas en un criterio y se revisan sus conversaciones para entender por qué.", consequence:"Podría permitir trasladar prácticas al resto.", role:"Operaciones · Calidad"}
+      ]
+    },
+    {
+      name:"Problemas de atención / reclamaciones ocultas", priority:"TOP 5", evidence:"Media",
+      why:"Parte de los problemas puede estar dentro de las conversaciones sin convertirse en reclamación formal.",
+      branches:[
+        {name:"Reclamación explícita", level:"confirmed", evidence:"Confirmada en Miranza", situation:"El paciente verbaliza claramente una reclamación o problema.", example:"“Es la tercera vez que llamo y nadie me soluciona esto.”", consequence:"Existe un problema que puede requerir revisión.", role:"Experiencia de Paciente · Calidad"},
+        {name:"Fricción sin reclamación formal", level:"partial", evidence:"Respaldada principalmente por Vithas", situation:"Hay señales claras de insatisfacción aunque no exista reclamación formal.", example:"“Vale, déjalo, ya veré qué hago” después de varios intentos fallidos.", consequence:"El problema puede no entrar en el circuito habitual de reclamaciones.", role:"Experiencia de Paciente"},
+        {name:"Motivos recurrentes", level:"inference", evidence:"Inferencia razonable", situation:"Muchas conversaciones contienen la misma fricción.", example:"Distintos pacientes repiten la misma queja relacionada con información previa a una prueba.", consequence:"Puede revelar una causa operativa recurrente.", role:"Experiencia de Paciente · Operaciones"},
+        {name:"Actuación preventiva", level:"hypothesis", evidence:"Hipótesis pendiente de validar", situation:"Una conversación problemática se identifica antes de una reclamación formal.", example:"Una llamada con fuerte insatisfacción se marca para revisión o recontacto.", consequence:"Podría permitir intervenir antes de que el problema escale.", role:"Experiencia de Paciente"}
+      ]
+    },
+    {
+      name:"Gestión de citas / capacidad desaprovechada", priority:"RADAR", evidence:"Media · Vithas",
+      why:"Una petición de cita puede terminar sin cita aunque exista alguna alternativa disponible.",
+      branches:[
+        {name:"Cita perdida pese a alternativa", level:"confirmed", evidence:"Confirmada en Vithas", situation:"No se obtiene cita aunque exista otra opción posible.", example:"No hay disponibilidad en el centro solicitado, pero sí en otro y no se ofrece.", consequence:"La conversación termina sin cita pese a existir alternativa.", role:"Operaciones · Citación"},
+        {name:"Alternativa no ofrecida", level:"confirmed", evidence:"Confirmada en Vithas", situation:"El agente no propone otro centro u opción.", example:"“Aquí no tenemos hueco hasta noviembre” y la gestión termina sin explorar otra sede.", consequence:"Capacidad disponible potencialmente desaprovechada.", role:"Contact Center · Operaciones"},
+        {name:"Diferencias entre agentes en citación", level:"hypothesis", evidence:"Hipótesis pendiente de validar", situation:"Algunos agentes buscan alternativas y otros no.", example:"Ante falta de hueco, unos revisan otro centro y otros terminan la llamada.", consequence:"Podría producir resultados distintos entre agentes.", role:"Contact Center"}
+      ]
+    },
+    {
+      name:"Recontactos / problemas no resueltos", priority:"RADAR", evidence:"Baja · hipótesis",
+      why:"Hipótesis: una interacción cerrada puede no equivaler a una necesidad realmente resuelta.",
+      branches:[
+        {name:"Recontacto por el mismo motivo", level:"hypothesis", evidence:"Hipótesis comercial", situation:"El mismo paciente vuelve por la misma necesidad.", example:"Llama el lunes por una autorización y vuelve el miércoles porque sigue sin resolverse.", consequence:"Nueva interacción operativa.", role:"Operaciones · Contact Center"},
+        {name:"Resolución aparente", level:"hypothesis", evidence:"Hipótesis comercial", situation:"La primera llamada figura como terminada, pero el problema persiste.", example:"La llamada queda cerrada y 48 horas después el paciente vuelve exactamente por el mismo motivo.", consequence:"La finalización de la llamada no garantiza resolución.", role:"Operaciones"}
+      ]
+    },
+    {
+      name:"Compliance / datos sensibles", priority:"RADAR", evidence:"Media · Vithas",
+      why:"Las conversaciones sanitarias pueden contener información sensible y procesos sujetos a reglas definidas.",
+      branches:[
+        {name:"Cumplimiento de regla definida", level:"partial", evidence:"Vithas a nivel de caso de uso", situation:"No se ejecuta una comprobación o paso obligatorio.", example:"Antes de continuar debía realizarse una comprobación y el agente la omite.", consequence:"El procedimiento establecido no se sigue.", role:"Compliance · Calidad"},
+        {name:"Trazabilidad", level:"partial", evidence:"Respaldada en Vithas", situation:"Poder reconstruir qué ocurrió ante una revisión.", example:"Ante una incidencia, se localiza la conversación y se comprueba qué pasos se siguieron.", consequence:"Facilita investigación y evidencia.", role:"Compliance · Calidad"},
+        {name:"Exposición indebida", level:"hypothesis", evidence:"Hipótesis comercial", situation:"Información sensible se solicita o comunica de manera incorrecta.", example:"Se comparte información sin realizar previamente una comprobación exigida.", consequence:"Potencial riesgo de privacidad.", role:"Compliance"}
+      ]
+    },
+    {
+      name:"Errores con posible impacto asistencial", priority:"RADAR", evidence:"Media-baja · cautela",
+      why:"Algunos errores de información durante una conversación pueden afectar al proceso asistencial posterior.",
+      branches:[
+        {name:"Instrucción incorrecta preprueba", level:"confirmed", evidence:"Confirmada en Vithas", situation:"Información de preparación dada incorrectamente.", example:"Se comunica de forma errónea una indicación relacionada con ayuno o preparación.", consequence:"Puede afectar a la realización posterior de la prueba.", role:"Calidad · Operaciones"},
+        {name:"Información necesaria omitida", level:"inference", evidence:"Inferencia razonable", situation:"No se proporciona una indicación relevante.", example:"Se agenda una prueba, pero no se comunica una instrucción necesaria para acudir correctamente preparado.", consequence:"Puede afectar al proceso posterior.", role:"Calidad · Operaciones"},
+        {name:"Situación de escalado", level:"partial", evidence:"Caso planteado en Vithas; alcance por validar", situation:"Aparece una situación que según el cliente debería seguir un procedimiento específico.", example:"El paciente comunica una situación previamente definida como susceptible de escalado y el flujo no se ejecuta.", consequence:"Potencial impacto asistencial.", role:"Operaciones · Calidad asistencial"}
+      ]
+    }
+  ]
+};
+
+const levelClass = {confirmed:"e-confirmed",partial:"e-partial",inference:"e-inference",hypothesis:"e-hypothesis"};
+
+function makeNode(depth,title,description,meta,level,label){
+  const row=document.createElement("div");
+  row.className="node depth-"+depth;
+  const btn=document.createElement("button");
+  btn.className="toggle";btn.type="button";btn.textContent="+";
+  btn.setAttribute("aria-expanded","false");
+  btn.setAttribute("aria-label","Desplegar "+(label||title));
+  const card=document.createElement("div");
+  card.className="card "+(depth===0?"root ":"")+(level?levelClass[level]:"");
+  card.innerHTML="<h"+Math.min(depth+2,4)+">"+title+"</h"+Math.min(depth+2,4)+">"+
+    (description?'<p>'+description+'</p>':'')+
+    (meta?'<div class="meta">'+meta.map(x=>'<span class="pill">'+x+'</span>').join("")+'</div>':'');
+  row.append(btn,card);
+  return {row,btn,card};
+}
+
+function branchDetails(b){
+  const box=document.createElement("div");
+  box.className="detail-grid";
+  box.innerHTML=
+    '<div class="detail wide"><div class="label">Ejemplo visual</div><div class="small">'+b.example+'</div></div>'+
+    '<div class="detail"><div class="label">Situación concreta</div><div class="small">'+b.situation+'</div></div>'+
+    '<div class="detail"><div class="label">Consecuencia</div><div class="small">'+b.consequence+'</div></div>'+
+    '<div class="detail"><div class="label">Cargo</div><div class="small">'+b.role+'</div></div>'+
+    '<div class="detail"><div class="label">Evidencia</div><div class="small">'+b.evidence+'</div></div>';
+  return box;
+}
+
+const tree=document.getElementById("tree");
+const rootStage=document.createElement("div");rootStage.className="root-stage";tree.appendChild(rootStage);
+const root=makeNode(0,"Rauda Intelligence · Salud","Explora los pains raíz y despliega los casos de uso hasta llegar al ejemplo concreto.",["Mapa vivo","Vithas + Miranza"],null,"los pains");
+rootStage.appendChild(root.row);
+const painsViewport=document.createElement("div");painsViewport.className="pains-viewport";
+const painNav=document.createElement("div");painNav.className="pain-nav";
+painNav.innerHTML='<span><strong>'+data.pains.length+' pains</strong> · navega y ajusta el zoom del mapa</span><div class="pain-tools"><div class="pain-nav-actions"><button type="button" data-direction="-1" aria-label="Ver pain anterior">←</button><button type="button" data-direction="1" aria-label="Ver pain siguiente">→</button></div><span class="pain-tools-separator" aria-hidden="true"></span><button type="button" data-zoom="-0.1" aria-label="Alejar mapa">−</button><span class="zoom-value" aria-live="polite">100%</span><button type="button" data-zoom="0.1" aria-label="Acercar mapa">+</button><button type="button" class="fit-map">Encajar</button></div>';
+const painsScroll=document.createElement("div");painsScroll.className="pains-scroll";painsScroll.tabIndex=0;painsScroll.setAttribute("role","region");painsScroll.setAttribute("aria-label","Pains de Rauda Intelligence, navegación horizontal");
+const painsWrap=document.createElement("div");
+painsWrap.className="children level-group pains-group";
+painsWrap.style.setProperty("--count",data.pains.length);
+painsScroll.appendChild(painsWrap);painsViewport.append(painNav,painsScroll);tree.appendChild(painsViewport);
+let currentPain=0,mapZoom=1;
+const zoomValue=painNav.querySelector(".zoom-value");
+function setMapZoom(value){
+  mapZoom=Math.max(.1,Math.min(1.5,Math.round(value*10)/10));
+  painsWrap.style.zoom=mapZoom;
+  zoomValue.textContent=Math.round(mapZoom*100)+"%";
+}
+painNav.querySelectorAll("[data-direction]").forEach(btn=>btn.addEventListener("click",()=>{
+  currentPain=Math.max(0,Math.min(data.pains.length-1,currentPain+Number(btn.dataset.direction)));
+  painsWrap.children[currentPain].scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+}));
+painNav.querySelectorAll("[data-zoom]").forEach(btn=>btn.addEventListener("click",()=>setMapZoom(mapZoom+Number(btn.dataset.zoom))));
+painNav.querySelector(".fit-map").addEventListener("click",()=>{
+  setMapZoom(1);
+  const fitted=Math.min(1,(painsScroll.clientWidth-8)/painsWrap.scrollWidth);
+  setMapZoom(fitted);
+  painsScroll.scrollLeft=0;currentPain=0;
+});
+
+data.pains.forEach((p)=>{
+  const painCell=document.createElement("section");painCell.className="tree-cell pain-cell";
+  const pn=makeNode(1,p.name,p.why,[p.priority,"Evidencia: "+p.evidence],null,"los casos de uso de "+p.name);
+  painCell.appendChild(pn.row);
+  const branchesWrap=document.createElement("div");
+  branchesWrap.className="children level-group branch-group";
+  branchesWrap.style.setProperty("--count",p.branches.length);
+  painCell.appendChild(branchesWrap);
+  painsWrap.appendChild(painCell);
+  p.branches.forEach((b)=>{
+    const branchCell=document.createElement("article");branchCell.className="tree-cell branch-cell";
+    const bn=makeNode(2,b.name,b.situation,[b.evidence],b.level,"el detalle de "+b.name);
+    branchCell.appendChild(bn.row);
+    const panel=document.createElement("div");panel.className="children detail-panel";
+    const card=document.createElement("div");card.className="detail-card "+levelClass[b.level];card.appendChild(branchDetails(b));panel.appendChild(card);
+    branchCell.appendChild(panel);
+    branchesWrap.appendChild(branchCell);
+    bn.btn.addEventListener("click",()=>toggle(panel,bn.btn));
+  });
+  pn.btn.addEventListener("click",()=>toggle(branchesWrap,pn.btn));
+});
+root.btn.addEventListener("click",()=>toggle(painsWrap,root.btn));
+
+function toggle(el,btn){
+  const open=el.classList.toggle("open");
+  btn.textContent=open?"−":"+";
+  btn.setAttribute("aria-expanded",String(open));
+  btn.setAttribute("aria-label",(open?"Cerrar ":"Desplegar ")+btn.getAttribute("aria-label").replace(/^(Desplegar|Cerrar) /,""));
+}
+document.getElementById("expandAll").addEventListener("click",()=>{
+  document.querySelectorAll(".children").forEach(x=>x.classList.add("open"));
+  document.querySelectorAll(".toggle").forEach(x=>{x.textContent="−";x.setAttribute("aria-expanded","true")});
+});
+document.getElementById("collapseAll").addEventListener("click",()=>{
+  document.querySelectorAll(".children").forEach(x=>x.classList.remove("open"));
+  document.querySelectorAll(".toggle").forEach(x=>{x.textContent="+";x.setAttribute("aria-expanded","false")});
+});
+</script>
+</body>
+</html>
